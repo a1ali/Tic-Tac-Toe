@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    min-height:100vh;
+    min-width: 100%;
+
+    background-color: black;
+    display: grid;
+    grid-template-columns: auto 600px auto;
+    grid-template-rows: auto 600px auto;
+
+    grid-template-areas: 
+    ". title ."
+    ". gamescreen ."
+    ". restart .";
+    
+}
+
+.title {
+    grid-area: title;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: -50px;
+
+    font-size: 100px;
+    font-family: "Nunito";
+    font-weight: 600;
+    color: white;
+
+}
+
+.gamescreen {
+    grid-area: gamescreen;
+    background-color: black;
+    font-size: 100px;
+    position: relative;
+    top: -70px;
+
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: 33% 33% 33%;
+
+}
+
+#box1 {
+    border-right: 13px solid white;
+    border-bottom: 13px solid white;
+}
+#box2 {
+    border-right: 13px solid white;
+    border-bottom: 13px solid white;
+}
+#box3 {
+    border-bottom: 13px solid white;
+}
+#box4 {
+    border-right: 13px solid white;
+    border-bottom: 13px solid white;
+}
+#box5 {
+    border-right: 13px solid white;
+    border-bottom: 13px solid white;
+}
+#box6 {
+    border-bottom: 13px solid white;
+}
+#box7 {
+    border-right: 13px solid white;
+}
+#box8 {
+    border-right: 13px solid white;
+}
+
+.textstyle {
+    
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 200px;
+    
+    font-family: "Nunito";
+    font-weight: 600;
+
+    animation: fadein;
+    transition: 2s;
+
+}
+@keyframes fadein {
+    from {opacity: 0%;}
+    to {opacity: 100%;}
+}
+
+
+.restart {
+    grid-area: restart;
+
+
+}
+
+.game-start-modal{
+    display: none;
+}
+
+.game-over-modal{
+    display: none;
+}
