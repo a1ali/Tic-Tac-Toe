@@ -91,6 +91,8 @@ const gameBoard = (() => {
 
 const game = (() => {
 
+    const screen = document.querySelector('.gamescreen');
+
     function checkwin(player) {
         if (//horizontal wins
             gameBoard.getGameArray(0,0) === player && gameBoard.getGameArray(0,1) === player && gameBoard.getGameArray(0,2) === player ||
@@ -112,6 +114,16 @@ const game = (() => {
         return false;
     }
 
+    function checktie() {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++){
+                if (gameBoard.getGameArray(i, j) === ''){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     function restartGame() {
         gameBoard.resetGameArray();
@@ -141,25 +153,24 @@ const game = (() => {
 
 
     if (humanMode) {
-
-        let screen = document.querySelector('.gamescreen');
-    
         screen.addEventListener('click', (e) => {
             xStarts()
-            game.updateGame(e.target.id, activePlayer.tag);
-            if (game.checkwin(activePlayer.tag)){
+            updateGame(e.target.id, activePlayer.tag);
+            if (checkwin(activePlayer.tag)){
                 console.log(`${activePlayer.tag} wins`)
-                game.restartGame();
+                restartGame();
                 activePlayer = playerO
-    
             }
+            if (checktie()) {
+                console.log('tie');
+            }        
         });
 
     }
 
     let restartBtn = document.getElementById("restartbtn");
     restartBtn.addEventListener('click', () => {
-        game.restartGame();
+        restartGame();
 
         if (humanMode)
         {
