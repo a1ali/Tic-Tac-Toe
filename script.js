@@ -92,6 +92,10 @@ const gameBoard = (() => {
 const game = (() => {
 
     const screen = document.querySelector('.gamescreen');
+    const gameovermodal = document.getElementById('game-over-modal-bg');
+    const whowins = document.getElementById('whowins');
+    const modalclose = document.getElementById('closeBtn');
+
 
     function checkwin(player) {
         if (//horizontal wins
@@ -154,18 +158,25 @@ const game = (() => {
 
     if (humanMode) {
         screen.addEventListener('click', (e) => {
-            xStarts()
-            updateGame(e.target.id, activePlayer.tag);
-            if (checkwin(activePlayer.tag)){
-                console.log(`${activePlayer.tag} wins`)
-                restartGame();
-                activePlayer = playerO
-            }
-            if (checktie()) {
-                console.log('tie');
-            }        
-        });
+         //only update if the position was previously empty
+            if (e.target.innerText === '') {
 
+                xStarts()
+                updateGame(e.target.id, activePlayer.tag);
+                if (checkwin(activePlayer.tag)){
+                    whowins.innerText = `${activePlayer.tag} wins the game!`;
+                    gameovermodal.style.display = 'flex';
+                    //console.log(`${activePlayer.tag} wins`)
+                    //restartGame();
+                    activePlayer = playerO
+                }
+                if (checktie()) {
+                    console.log('tie');
+                    whowins.innerText = `It's a tie`;
+                    gameovermodal.style.display = 'flex';
+                } 
+            }
+        });
     }
 
     let restartBtn = document.getElementById("restartbtn");
@@ -179,6 +190,10 @@ const game = (() => {
     })
 
 
+    modalclose.addEventListener('click', () => {
+        gameovermodal.style.display = 'none';
+    })
+
     return {
         checkwin,
         restartGame,
@@ -186,43 +201,3 @@ const game = (() => {
     }
 
 })();
-
-
-
-/*
-let playerX = player('X');
-let playerO = player('O');
-
-let activePlayer = playerO;
-
-
-let screen = document.querySelector('.gamescreen');
-
-screen.addEventListener('click', (e) => {
-    if (activePlayer === playerO) {
-        activePlayer = playerX;
-    }
-
-    else {
-        activePlayer = playerO;
-    }
-
-    game.updateGame(e.target.id, activePlayer.tag);
-    if (game.checkwin(activePlayer.tag)){
-        console.log(`${activePlayer.tag} wins`)
-        game.restartGame();
-        activePlayer = playerO
-        
-    }
-
-
-});
-
-
-let restartBtn = document.getElementById("restartbtn");
-restartBtn.addEventListener('click', () => {
-    game.restartGame();
-    activePlayer = playerO;
-})
-
-*/
