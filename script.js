@@ -158,10 +158,10 @@ const game = (() => {
 
     if (humanMode) {
         screen.addEventListener('click', (e) => {
-         //only update if the position was previously empty
+         //only update if the position is empty
             if (e.target.innerText === '') {
 
-                xStarts()
+                xStarts() //swaps active player
                 updateGame(e.target.id, activePlayer.tag);
                 if (checkwin(activePlayer.tag)){
                     whowins.innerText = `${activePlayer.tag} wins the game!`;
@@ -170,8 +170,8 @@ const game = (() => {
                     //restartGame();
                     activePlayer = playerO
                 }
-                if (checktie()) {
-                    console.log('tie');
+                else if (checktie()) {
+                    //console.log('tie');
                     whowins.innerText = `It's a tie`;
                     gameovermodal.style.display = 'flex';
                 } 
