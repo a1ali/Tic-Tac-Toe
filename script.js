@@ -1,5 +1,5 @@
 let humanMode = false;
-let computerMode = true;
+let computerMode = false;
 
 const player = (tag) => {
     return {tag}
@@ -173,28 +173,27 @@ const game = (() => {
         }
     }
 
+    function doChecking(activePlayer) {
+        if (checkwin(activePlayer.tag) && gameOver === false){
+            whowins.innerText = `${activePlayer.tag} wins the game!`;
+            gameovermodal.style.display = 'flex';
+            gameOver = true;
+        } 
+        if (checktie() && gameOver === false) {
+            whowins.innerText = `It's a tie`;
+            gameovermodal.style.display = 'flex';
+            gameOver = true;
+        }   
+    }
 
+ /*
     if (humanMode) {
         screen.addEventListener('click', (e) => {
          //only update if the position is empty
             if (e.target.innerText === '' && gameOver === false) {
-
                 xStarts() //swaps active player
                 updateGame(e.target.id, activePlayer.tag);
-                if (checkwin(activePlayer.tag)){
-                    whowins.innerText = `${activePlayer.tag} wins the game!`;
-                    gameovermodal.style.display = 'flex';
-                    //console.log(`${activePlayer.tag} wins`)
-                    //restartGame();
-                    activePlayer = playerO;
-                    gameOver = true;
-                }
-                else if (checktie()) {
-                    //console.log('tie');
-                    whowins.innerText = `It's a tie`;
-                    gameovermodal.style.display = 'flex';
-                    gameOver = true;
-                } 
+                doChecking(activePlayer)
             }
         });
     }
@@ -205,45 +204,58 @@ const game = (() => {
             //only update if the position is empty
                if (e.target.innerText === '' && gameOver === false) {
    
-                    //xStarts() //swaps active player
+                    //xStarts - human
                     activePlayer = playerX
-
                     if (gameOver === false) {
                         updateGame(e.target.id, activePlayer.tag);
                     }
+                    doChecking(activePlayer);
 
-                    if (checkwin(activePlayer.tag) && gameOver === false){
-                        whowins.innerText = `${activePlayer.tag} wins the game!`;
-                        gameovermodal.style.display = 'flex';
-                        gameOver = true;
-                    } 
-                    if (checktie() && gameOver === false) {
-                        whowins.innerText = `It's a tie`;
-                        gameovermodal.style.display = 'flex';
-                        gameOver = true;
-                    } 
-
-
+                    //computer turn
                     activePlayer = playerO;
                     if (gameOver === false) {
                         updateGame(getRandomEmptySpace(), activePlayer.tag);
                     }
-                    if (checkwin(activePlayer.tag) && gameOver === false){
-                       whowins.innerText = `${activePlayer.tag} wins the game!`;
-                       gameovermodal.style.display = 'flex';
-                       gameOver = true;
-                    }
-                    if (checktie() && gameOver === false) {
-                       whowins.innerText = `It's a tie`;
-                       gameovermodal.style.display = 'flex';
-                       gameOver = true;
-                    } 
+                    doChecking(activePlayer)
+
                     activePlayer = playerX;
                }
            });
-
-
     }
+
+     */
+
+
+
+    screen.addEventListener('click', (e) => {
+        //only update if the position is empty
+           if (e.target.innerText === '' && gameOver === false) {
+
+                if (humanMode) {  
+                    xStarts() //swaps active player
+                    updateGame(e.target.id, activePlayer.tag);
+                    doChecking(activePlayer)
+                }
+
+                else if (computerMode) {
+                    //xStarts - human
+                    activePlayer = playerX
+                    if (gameOver === false) {
+                        updateGame(e.target.id, activePlayer.tag);
+                    }
+                    doChecking(activePlayer);
+
+                    //computer turn
+                    activePlayer = playerO;
+                    if (gameOver === false) {
+                        updateGame(getRandomEmptySpace(), activePlayer.tag);
+                    }
+                    doChecking(activePlayer)
+
+                    activePlayer = playerX;
+                }
+           }
+       });
 
     function getRandomEmptySpace(){
         let emptySpace = false;
@@ -289,3 +301,25 @@ const game = (() => {
     }
 
 })();
+
+let gameStartModal = document.querySelector('.game-start-modal')
+let gameScreenContainer = document.querySelector('.container')
+let humanModeSelector = document.getElementById('humanMode');
+let computerModeSelector = document.getElementById('computerMode');
+
+humanModeSelector.addEventListener('click', () => {
+    humanMode = true;
+    gameStartModal.style.transition = '0.8s';
+    gameStartModal.style.opacity = 0;
+    gameStartModal.style.display = 'none';
+    gameScreenContainer.style.display = 'grid';
+
+})
+
+computerModeSelector.addEventListener('click', () => {
+    computerMode = true;
+    gameStartModal.style.transition = '0.8s';
+    gameStartModal.style.opacity = 0;
+    gameStartModal.style.display = 'none';
+    gameScreenContainer.style.display = 'grid';
+})
