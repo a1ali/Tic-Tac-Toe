@@ -1,4 +1,5 @@
-let humanMode = true;
+let humanMode = false;
+let computerMode = true;
 
 const player = (tag) => {
     return {tag}
@@ -70,6 +71,22 @@ const gameBoard = (() => {
         }
 
     }
+
+    function getBox(pos) {
+        let posToBox = {
+            '00': 'box1',
+            '01': 'box2',
+            '02': 'box3',
+            '10': 'box4',
+            '11': 'box5',
+            '12': 'box6',
+            '20': 'box7',
+            '21': 'box8',
+            '22': 'box9',
+        }
+
+        return posToBox[pos];
+    }
     
     function resetGameArray() {
         gameArray = [['', '', ''], ['', '', ''], ['', '', '']];
@@ -84,6 +101,7 @@ const gameBoard = (() => {
         updateGameArray,
         resetGameArray,
         renderBoard,
+        getBox,
         getGameArray,
     }
 
@@ -139,7 +157,7 @@ const game = (() => {
         gameBoard.renderBoard();
     }
 
-
+    let gameOver = false;
     let playerX = player('X');
     let playerO = player('O');
     let activePlayer = playerO;
@@ -159,7 +177,7 @@ const game = (() => {
     if (humanMode) {
         screen.addEventListener('click', (e) => {
          //only update if the position is empty
-            if (e.target.innerText === '') {
+            if (e.target.innerText === '' && gameOver === false) {
 
                 xStarts() //swaps active player
                 updateGame(e.target.id, activePlayer.tag);
@@ -168,15 +186,83 @@ const game = (() => {
                     gameovermodal.style.display = 'flex';
                     //console.log(`${activePlayer.tag} wins`)
                     //restartGame();
-                    activePlayer = playerO
+                    activePlayer = playerO;
+                    gameOver = true;
                 }
                 else if (checktie()) {
                     //console.log('tie');
                     whowins.innerText = `It's a tie`;
                     gameovermodal.style.display = 'flex';
+                    gameOver = true;
                 } 
             }
         });
+    }
+
+    else if (computerMode) {
+
+        screen.addEventListener('click', (e) => {
+            //only update if the position is empty
+               if (e.target.innerText === '' && gameOver === false) {
+   
+                    //xStarts() //swaps active player
+                    activePlayer = playerX
+
+                    if (gameOver === false) {
+                        updateGame(e.target.id, activePlayer.tag);
+                    }
+
+                    if (checkwin(activePlayer.tag) && gameOver === false){
+                        whowins.innerText = `${activePlayer.tag} wins the game!`;
+                        gameovermodal.style.display = 'flex';
+                        gameOver = true;
+                    } 
+                    if (checktie() && gameOver === false) {
+                        whowins.innerText = `It's a tie`;
+                        gameovermodal.style.display = 'flex';
+                        gameOver = true;
+                    } 
+
+
+                    activePlayer = playerO;
+                    if (gameOver === false) {
+                        updateGame(getRandomEmptySpace(), activePlayer.tag);
+                    }
+                    if (checkwin(activePlayer.tag) && gameOver === false){
+                       whowins.innerText = `${activePlayer.tag} wins the game!`;
+                       gameovermodal.style.display = 'flex';
+                       gameOver = true;
+                    }
+                    if (checktie() && gameOver === false) {
+                       whowins.innerText = `It's a tie`;
+                       gameovermodal.style.display = 'flex';
+                       gameOver = true;
+                    } 
+                    activePlayer = playerX;
+               }
+           });
+
+
+    }
+
+    function getRandomEmptySpace(){
+        let emptySpace = false;
+        let box = null;
+
+        while(emptySpace === false) {
+            let x = Math.floor(Math.random() * 3);
+            let y = Math.floor(Math.random() * 3);
+            let pos = gameBoard.getGameArray(x,y)
+            console.log(pos)
+            if (pos === '') {
+                emptySpace = true;
+                box = gameBoard.getBox(`${x}${y}`)
+            }
+            console.log('trying to find a space')
+        }
+
+        return box;
+
     }
 
     let restartBtn = document.getElementById("restartbtn");
@@ -187,6 +273,8 @@ const game = (() => {
         {
             activePlayer = playerO;
         }
+        gameOver = false;
+
     })
 
 
