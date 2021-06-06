@@ -89,7 +89,7 @@
 
 }
 
-@media only screen and (max-width : 1297px)
+@media only screen and (max-width : 1750px)
 {
     .container {
         min-height:100vh;
@@ -121,7 +121,7 @@
     {
       color: white;
       text-align: center;
-      font-size: 5rem;
+      font-size: 6rem;
       position: relative;
       top: 30%;
       font-family: "Nunito";
