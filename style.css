@@ -110,7 +110,7 @@
         grid-area: gamescreen;
         background-color: black;
         position: relative;
-        top: -30%;
+        top: -25%;
     
         display: grid;
         grid-template-columns: 33% 33% 33%;
