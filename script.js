@@ -158,12 +158,15 @@ const game = (() => {
     }
 
     let gameOver = false;
+
+    //using factory function to create players
     let playerX = player('X');
     let playerO = player('O');
+
     let activePlayer = playerO;
 
     function xStarts() {
-
+        //swap the active player
         if (activePlayer === playerO) {
             activePlayer = playerX;
         }
@@ -185,47 +188,6 @@ const game = (() => {
             gameOver = true;
         }   
     }
-
- /*
-    if (humanMode) {
-        screen.addEventListener('click', (e) => {
-         //only update if the position is empty
-            if (e.target.innerText === '' && gameOver === false) {
-                xStarts() //swaps active player
-                updateGame(e.target.id, activePlayer.tag);
-                doChecking(activePlayer)
-            }
-        });
-    }
-
-    else if (computerMode) {
-
-        screen.addEventListener('click', (e) => {
-            //only update if the position is empty
-               if (e.target.innerText === '' && gameOver === false) {
-   
-                    //xStarts - human
-                    activePlayer = playerX
-                    if (gameOver === false) {
-                        updateGame(e.target.id, activePlayer.tag);
-                    }
-                    doChecking(activePlayer);
-
-                    //computer turn
-                    activePlayer = playerO;
-                    if (gameOver === false) {
-                        updateGame(getRandomEmptySpace(), activePlayer.tag);
-                    }
-                    doChecking(activePlayer)
-
-                    activePlayer = playerX;
-               }
-           });
-    }
-
-     */
-
-
 
     screen.addEventListener('click', (e) => {
         //only update if the position is empty
@@ -265,12 +227,11 @@ const game = (() => {
             let x = Math.floor(Math.random() * 3);
             let y = Math.floor(Math.random() * 3);
             let pos = gameBoard.getGameArray(x,y)
-            console.log(pos)
+            //console.log(pos)
             if (pos === '') {
                 emptySpace = true;
                 box = gameBoard.getBox(`${x}${y}`)
             }
-            console.log('trying to find a space')
         }
 
         return box;
