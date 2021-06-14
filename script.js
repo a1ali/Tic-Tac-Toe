@@ -96,6 +96,11 @@ const gameBoard = (() => {
         return gameArray[p1][p2];
     }
 
+    //need for minimax
+    function setGameArray(p1, p2, val) {
+        gameArray[p1][p2] = val;
+    }
+
 
     return {
         updateGameArray,
@@ -103,6 +108,7 @@ const gameBoard = (() => {
         renderBoard,
         getBox,
         getGameArray,
+        setGameArray,
     }
 
 })();
@@ -210,7 +216,13 @@ const game = (() => {
                     //computer turn
                     activePlayer = playerO;
                     if (gameOver === false) {
-                        updateGame(getRandomEmptySpace(), activePlayer.tag);
+                        //updateGame(getRandomEmptySpace(), activePlayer.tag);
+
+                        //ai
+                        let move = bestMoveForO();
+                        box = gameBoard.getBox(`${move.x}${move.y}`);
+                        updateGame(box, activePlayer.tag);
+
                     }
                     doChecking(activePlayer)
 
@@ -255,6 +267,100 @@ const game = (() => {
         gameovermodal.style.display = 'none';
     })
 
+
+    function minimax(depth, isMax) {
+        
+        if (checkwin(playerO.tag)) {
+            return 10;
+           
+        }
+        else if (checkwin(playerX.tag)) {
+            return -10;
+        }
+        else if (checktie()) {
+            return 0;
+        }
+
+        if (isMax) {
+            let best = -Infinity;
+
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++){
+
+                    if (gameBoard.getGameArray(i,j) == '') {
+
+                        //make the move
+                        gameBoard.setGameArray(i,j, playerO.tag);
+
+                        //call minimax recursively
+                        best = Math.max(best, minimax(depth + 1, false));
+                        //undo the move
+                        gameBoard.setGameArray(i,j, '');
+
+                        
+                    }
+
+                }
+            }
+
+            return best;
+        }
+
+        //if minimizer
+        else {
+
+            let best = Infinity;
+
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++){
+
+                    if (gameBoard.getGameArray(i,j) == '') {
+
+                        //make the move
+                        gameBoard.setGameArray(i,j, playerX.tag);
+
+                        //call minimax recursively
+                        best = Math.min(best, minimax(depth + 1, true));
+                        //undo the move
+                        gameBoard.setGameArray(i,j, '');
+
+                        
+                    }
+                }
+            }
+            return best;
+        }
+    }
+
+    function bestMoveForO() {
+        let bestVal = -Infinity;
+        let bestMove = {
+            x : null,
+            y : null,
+        }
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+
+                if (gameBoard.getGameArray(i, j) === '') {
+
+                    gameBoard.setGameArray(i,j, playerO.tag);
+                    let moveVal = minimax(0, false);
+                    gameBoard.setGameArray(i,j, '');
+
+                    if (moveVal > bestVal) {
+                        bestMove.x = i;
+                        bestMove.y = j;
+                        bestVal = moveVal;
+                    }
+
+                }
+            }
+        }
+
+        return bestMove;
+    }
+
     return {
         checkwin,
         restartGame,
@@ -268,19 +374,21 @@ let gameScreenContainer = document.querySelector('.container')
 let humanModeSelector = document.getElementById('humanMode');
 let computerModeSelector = document.getElementById('computerMode');
 
-humanModeSelector.addEventListener('click', () => {
-    humanMode = true;
+function gameStartCSS() {
+
     gameStartModal.style.transition = '0.8s';
     gameStartModal.style.opacity = 0;
     gameStartModal.style.display = 'none';
     gameScreenContainer.style.display = 'grid';
 
+}
+
+humanModeSelector.addEventListener('click', () => {
+    humanMode = true;
+    gameStartCSS();
 })
 
 computerModeSelector.addEventListener('click', () => {
     computerMode = true;
-    gameStartModal.style.transition = '0.8s';
-    gameStartModal.style.opacity = 0;
-    gameStartModal.style.display = 'none';
-    gameScreenContainer.style.display = 'grid';
+    gameStartCSS();
 })
